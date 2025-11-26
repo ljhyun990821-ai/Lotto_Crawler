@@ -1,0 +1,44 @@
+name: Update Store DB (Manual)
+
+# 'Run workflow' 버튼을 눌렀을 때만 실행됩니다.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-stores:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 저장소 체크아웃
+      uses: actions/checkout@v3
+
+    - name: 파이썬 설정
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: 라이브러리 설치
+      run: |
+        pip install requests beautifulsoup4
+        # 또는 pip install -r requirements.txt
+
+    - name: 판매점 DB 크롤링 실행 (update_store 모드)
+      # 여기가 핵심입니다. 판매점 업데이트 모드로 실행합니다.
+      # 시간이 오래 걸릴 수 있으므로(5~10분) timeout 조심해야 하지만, GitHub 무료는 6시간까지 괜찮습니다.
+      run: |
+        python scripts/crawler_Stores.py
+
+    - name: 변경사항 커밋 및 푸시
+      run: |
+        git config --global user.name 'LottoBot'
+        git config --global user.email 'bot@noreply.github.com'
+        
+        # stores.json 파일만 변경되었을 것이므로 해당 파일 추가
+        git add assets/data/stores.json
+        
+        # 변경사항이 없으면 에러 없이 종료, 있으면 커밋
+        git commit -m "Update Store DB: $(date +'%Y-%m-%d')" || exit 0
+        git push
