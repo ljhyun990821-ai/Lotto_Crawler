@@ -1,0 +1,40 @@
+name: Update Lotto Data
+
+on:
+  schedule:
+    # 매주 토요일 한국시간 22:00 (UTC 13:00) 실행
+    - cron: '0 13 * * 6'
+  workflow_dispatch: # 수동 실행 버튼 추가
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 저장소 체크아웃
+      uses: actions/checkout@v3
+
+    - name: 파이썬 설정
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: 라이브러리 설치
+      run: |
+        pip install -r requirements.txt
+
+    - name: 크롤러 실행 (Weekly)
+      run: |
+        python scripts/crawler.py --mode weekly
+
+    - name: 변경사항 커밋 및 푸시
+      run: |
+        git config --global user.name 'LottoBot'
+        git config --global user.email 'bot@noreply.github.com'
+        git add assets/data/*.json
+        # 변경사항이 없으면 에러 안 내고 조용히 종료
+        git commit -m "Update Lotto Data: $(date +'%Y-%m-%d')" || exit 0
+        git push
