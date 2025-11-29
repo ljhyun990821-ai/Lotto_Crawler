@@ -1,29 +1,29 @@
 {
-  "round": 1199,
-  "date": "2025년 11월 22일",
+  "round": 1200,
+  "date": "2025년 11월 29일",
   "numbers": [
+    1,
+    2,
+    4,
     16,
-    24,
-    25,
-    30,
-    31,
+    20,
     32
   ],
-  "bonus": 7,
+  "bonus": 45,
   "result": {
     "1st": {
-      "prize": 1695609839,
-      "winners": 17,
+      "prize": 2357299875,
+      "winners": 12,
       "stores": []
     },
     "2nd": {
-      "prize": 64056372,
-      "winners": 75,
+      "prize": 58932497,
+      "winners": 80,
       "stores": []
     },
     "3rd": {
-      "prize": 1371070,
-      "winners": 3504
+      "prize": 1315458,
+      "winners": 3584
     }
   }
 }
